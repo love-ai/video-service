@@ -32,18 +32,25 @@ function connectEnd() {
 // })
 
 
-exports.addUser = function (name, mobile) {
+exports.addUser = function (name, mobile, res) {
   connect();
+  let response = {
+    "code": 0,
+    "msg": "success",
+    "data": {
+      "res": "hello rn"
+    }
+  }
   console.log(name + "****" + mobile)
   const sql = 'INSERT INTO user(id,name,mobile,user_type) VALUES(0,?,?,?)';
   const addSqlParams = [name, mobile, '1']
   connection.query(sql, addSqlParams, function (err, result) {
     connectEnd();
     if (err) {
+      response.code = 1;
+      response.msg = err.message;
       console.log('[SELECT ERR]--', err.message);
-      return false;
     }
-    return true;
+    res.end(JSON.stringify(response))
   })
-  return false;
 }

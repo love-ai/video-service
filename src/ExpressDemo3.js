@@ -6,13 +6,14 @@ var app = express();
 
 app.use(express.static(__dirname));//这个地方
 // 创建 application/x-www-form-urlencoded 编码解析
-var urlencodedParser = bodyParser.urlencoded({extended: false})
+// var urlencodedParser = bodyParser.urlencoded({extended: false})
+var jsonParser = bodyParser.json({extended: false})
 
 app.get('/index.html', function (req, res) {
   res.sendFile(path.resolve(__dirname, "../index.html"))//访问上一级目录
 })
 
-app.post('/process_post', urlencodedParser, function (req, res) {
+app.post('/process_post', jsonParser, function (req, res) {
   let response = {
     // "firstName": req.query.firstName,
     // "lastName": req.query.lastName,
@@ -22,20 +23,13 @@ app.post('/process_post', urlencodedParser, function (req, res) {
 })
 
 
-app.post('/add_user', urlencodedParser, function (req, res) {
-  let response = {
-    "code": 0,
-    "msg": "success",
-  }
+app.post('/add_user', jsonParser, function (req, res) {
   let name = req.body.name;
   let mobile = req.body.mobile;
   console.log(name + "--" + mobile)
   //插入数据库
-  let result = sql.addUser(name, mobile);
-  if (!result) {
-    response.code = 1;
-  }
-  res.end(JSON.stringify(response))
+  sql.addUser(name, mobile, res);
+
 })
 
 var server = app.listen(8080, function () {
