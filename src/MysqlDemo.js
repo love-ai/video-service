@@ -5,7 +5,8 @@ var connection = mysql.createConnection({
   user: 'admin',
   password: 'carlwe.com',
   port: '3306',
-  database: 'test'
+  database: 'test',
+  useConnectionPooling: true
 })
 
 
