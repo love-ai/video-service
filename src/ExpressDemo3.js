@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path')
 var bodyParser = require('body-parser');
+var sql = require("./MysqlDemo");
 var app = express();
 
 app.use(express.static(__dirname));//这个地方
@@ -16,6 +17,23 @@ app.post('/process_post', urlencodedParser, function (req, res) {
     // "firstName": req.query.firstName,
     // "lastName": req.query.lastName,
     "firstName": req.body.firstName, "lastName": req.body.lastName,
+  }
+  res.end(JSON.stringify(response))
+})
+
+
+app.post('/add_user', urlencodedParser, function (req, res) {
+  let response = {
+    "code": 0,
+    "msg": "success",
+  }
+  let name = req.body.name;
+  let mobile = req.body.mobile;
+  console.log(name + "--" + mobile)
+  //插入数据库
+  let result = sql.addUser(name, mobile);
+  if (!result) {
+    response.code = 1;
   }
   res.end(JSON.stringify(response))
 })
