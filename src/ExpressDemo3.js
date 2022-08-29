@@ -19,11 +19,17 @@ app.post('/login', jsonParser, function (req, res) {
         response.code = 1;
         response.msg = err;
       } else {
-        if (result.password === password) {
-          response.data.user = result
+        if (result.length === 0) {
+          response.code = 1;
+          response.msg = "请输入正确的手机号";
         } else {
-          response.code = 2;
-          response.msg = "密码错误";
+          let res = result[0]
+          if (res.password === password) {
+            response.data.user = res
+          } else {
+            response.code = 2;
+            response.msg = "密码错误";
+          }
         }
       }
       res.end(JSON.stringify(response))
@@ -43,12 +49,16 @@ app.get('/getVideoList', function (req, res) {
       response.code = 1;
       response.msg = err;
       res.end(JSON.stringify(response))
-    } else if (result.user_type === 2) {
+    } else if (result.length === 0) {
+      response.code = 1;
+      response.msg = "未找到用户";
+      res.end(JSON.stringify(response))
+    } else if (result[0].user_type === 2) {
       response.code = 1002;
       response.msg = "您没有查看视频的权限";
       res.end(JSON.stringify(response))
     } else {
-      sql.queryVideoList(function (err, result) {
+      sql.queryVideoList(result[0].id, function (err, result) {
         if (err) {
           response.code = 1;
           response.msg = err;
