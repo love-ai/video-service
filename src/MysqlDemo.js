@@ -1,5 +1,4 @@
 const mysql = require('mysql');
-const {query} = require("express");
 const pool = mysql.createPool({
   name: 'database-3.cknl2c6ecure.ap-northeast-1.rds.amazonaws.com',
   host: 'database-3.cknl2c6ecure.ap-northeast-1.rds.amazonaws.com',
