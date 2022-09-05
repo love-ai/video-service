@@ -89,6 +89,20 @@ app.get('/api/userList', function (req, res) {
   })
 });
 
+app.post('/api/uploadVideo', function (req, res) {
+  let response = getResponse();
+  let title = req.body.title;
+  let thumbnail = req.body.thumbnail;
+  let source_url = req.body.source_url;
+  sql.uploadVideo(title, thumbnail, source_url, function (err, result) {
+    if (err) {
+      response.code = 1;
+      response.msg = err;
+    }
+    res.end(JSON.stringify(response))
+  })
+});
+
 
 app.post('/likeVideo', jsonParser, function (req, res) {
   let response = getResponse();

@@ -27,6 +27,13 @@ exports.queryAllUser = function (callback) {
   queryDb(sql, addSqlParams, callback);
 }
 
+
+exports.uploadVideo = function (title, thumbnail, source_url, callback) {
+  const sql = 'INSERT INTO video(title,thumbnail,source_url) VALUES(?,?,?)'
+  const addSqlParams = [title, thumbnail, source_url];
+  queryDb(sql, addSqlParams, callback);
+}
+
 exports.queryVideoList = function (user_id, callback) {
   const sql = 'SELECT v.*,like_type\n' +
     'FROM like_log AS l\n' +
