@@ -9,7 +9,7 @@ app.use(express.static(__dirname));//这个地方
 const jsonParser = bodyParser.json({extended: false});
 
 
-app.post('/login', jsonParser, function (req, res) {
+app.post('/api/login', jsonParser, function (req, res) {
   let response = getResponse();
   let mobile = req.body.mobile;
   let password = req.body.password;
@@ -41,7 +41,7 @@ app.post('/login', jsonParser, function (req, res) {
   }
 })
 
-app.get('/getVideoList', function (req, res) {
+app.get('/api/videoList', function (req, res) {
   let response = getResponse();
   let userId = req.query.userId;
   sql.queryUserById(userId, function (err, result) {
@@ -70,6 +70,25 @@ app.get('/getVideoList', function (req, res) {
     }
   })
 });
+
+app.get('/api/userList', function (req, res) {
+  let response = getResponse();
+  sql.queryAllUser(function (err, result) {
+    if (err) {
+      response.code = 1;
+      response.msg = err;
+      res.end(JSON.stringify(response))
+    } else if (result.length === 0) {
+      response.code = 1;
+      response.msg = "暂无用户";
+      res.end(JSON.stringify(response))
+    } else {
+      response.data.userList = result
+      res.end(JSON.stringify(response))
+    }
+  })
+});
+
 
 app.post('/likeVideo', jsonParser, function (req, res) {
   let response = getResponse();

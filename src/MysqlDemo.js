@@ -21,6 +21,12 @@ exports.queryUserById = function (id, callback) {
   queryDb(sql, addSqlParams, callback);
 }
 
+exports.queryAllUser = function (callback) {
+  const sql = 'SELECT * FROM user';
+  const addSqlParams = []
+  queryDb(sql, addSqlParams, callback);
+}
+
 exports.queryVideoList = function (user_id, callback) {
   const sql = 'SELECT v.*,like_type\n' +
     'FROM like_log AS l\n' +
