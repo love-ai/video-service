@@ -66,7 +66,7 @@ app.post('/api/addVideo', jsonParser, function (req, res) {
 app.get('/api/videoList', function (req, res) {
   let response = getResponse();
   let userId = req.query.userId;
-  let isApp = req.headers.app_name === "rn-video";
+  let isApp = req.headers.app_name === "RnVideo";
   sql.queryUserById(userId, function (err, result) {
     if (err) {
       response.code = 1;
