@@ -75,7 +75,7 @@ app.get('/api/videoList', function (req, res) {
       response.code = 1;
       response.msg = "未找到用户";
       res.end(JSON.stringify(response))
-    } else if (result[0].user_type === 2) {
+    } else if (result[0].user_type === 0) {
       response.code = 1002;
       response.msg = "您没有查看视频的权限";
       res.end(JSON.stringify(response))
@@ -89,6 +89,38 @@ app.get('/api/videoList', function (req, res) {
         }
         res.end(JSON.stringify(response))
       })
+    }
+  })
+});
+
+app.post('/api/addUser', jsonParser, function (req, res) {
+  let response = getResponse();
+  if (!checkBody(req, response)) {
+    res.end(JSON.stringify(response))
+    return;
+  }
+  let mobile = req.body.mobile;
+  sql.queryUserByMobile(mobile, function (err, result) {
+    if (err) {
+      response.code = 1;
+      response.msg = err;
+      res.end(JSON.stringify(response))
+    } else {
+      if (result.length > 0) {
+        response.code = 1;
+        response.msg = "该用户已存在";
+        res.end(JSON.stringify(response))
+      } else {
+        //用户不存在 插入
+        let data = req.body;
+        sql.addUser(data, function (err, result) {
+          if (err) {
+            response.code = 1;
+            response.msg = err;
+          }
+          res.end(JSON.stringify(response))
+        })
+      }
     }
   })
 });

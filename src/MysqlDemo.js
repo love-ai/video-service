@@ -27,6 +27,12 @@ exports.queryAllUser = function (callback) {
   queryDb(sql, addSqlParams, callback);
 }
 
+exports.addUser = function (data, callback) {
+  const sql = 'INSERT INTO user(name,mobile,user_type,password) VALUES(?,?,?,?)'
+  const addSqlParams = [data.name, data.mobile, data.user_type, data.password];
+  queryDb(sql, addSqlParams, callback);
+}
+
 
 exports.uploadVideo = function (data, callback) {
   const sql = 'INSERT INTO video(title,thumbnail,source_url,s3_url,upload_time) VALUES(?,?,?,?,?)'
