@@ -5,7 +5,7 @@ const sql = require("./MysqlUtil");
 const date = require("./DateUtil");
 const app = express();
 
-app.use(express.static(__dirname));//这个地方
+app.use(express.static(__dirname));
 const jsonParser = bodyParser.json({extended: false});
 
 
