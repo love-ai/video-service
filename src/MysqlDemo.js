@@ -28,9 +28,9 @@ exports.queryAllUser = function (callback) {
 }
 
 
-exports.uploadVideo = function (title, thumbnail, source_url, callback) {
-  const sql = 'INSERT INTO video(title,thumbnail,source_url) VALUES(?,?,?)'
-  const addSqlParams = [title, thumbnail, source_url];
+exports.uploadVideo = function (data, callback) {
+  const sql = 'INSERT INTO video(title,thumbnail,source_url,s3_url,upload_time) VALUES(?,?,?,?,?)'
+  const addSqlParams = [data.title, data.thumbnail, data.source_url, data.s3_url, data.upload_time];
   queryDb(sql, addSqlParams, callback);
 }
 
@@ -38,7 +38,7 @@ exports.queryVideoList = function (user_id, callback) {
   const sql = 'SELECT v.*,like_type\n' +
     'FROM like_log AS l\n' +
     'RIGHT JOIN  video AS v\n' +
-    'ON v.id = l.video_id and l.user_id = ?';
+    'ON v.id = l.video_id and l.user_id = ? ORDER BY id DESC';
   const addSqlParams = [user_id];
   queryDb(sql, addSqlParams, callback);
 }

@@ -11,6 +11,10 @@ const jsonParser = bodyParser.json({extended: false});
 
 app.post('/api/login', jsonParser, function (req, res) {
   let response = getResponse();
+  if (!checkBody(req, response)) {
+    res.end(JSON.stringify(response))
+    return;
+  }
   let mobile = req.body.mobile;
   let password = req.body.password;
   if (mobile) {
@@ -40,6 +44,24 @@ app.post('/api/login', jsonParser, function (req, res) {
     res.end(JSON.stringify(response))
   }
 })
+
+app.post('/api/addVideo', jsonParser, function (req, res) {
+  let response = getResponse();
+  if (!checkBody(req, response)) {
+    res.end(JSON.stringify(response))
+    return;
+  }
+  let data = req.body;
+  data.upload_time = date.dateFormat("YYYY-mm-dd HH:MM:SS", new Date());
+  sql.uploadVideo(data, function (err, result) {
+    if (err) {
+      response.code = 1;
+      response.msg = err;
+    }
+    res.end(JSON.stringify(response))
+  })
+});
+
 
 app.get('/api/videoList', function (req, res) {
   let response = getResponse();
@@ -89,23 +111,13 @@ app.get('/api/userList', function (req, res) {
   })
 });
 
-app.post('/api/uploadVideo', function (req, res) {
+
+app.post('/api/likeVideo', jsonParser, function (req, res) {
   let response = getResponse();
-  let title = req.body.title;
-  let thumbnail = req.body.thumbnail;
-  let source_url = req.body.source_url;
-  sql.uploadVideo(title, thumbnail, source_url, function (err, result) {
-    if (err) {
-      response.code = 1;
-      response.msg = err;
-    }
+  if (!checkBody(req, response)) {
     res.end(JSON.stringify(response))
-  })
-});
-
-
-app.post('/likeVideo', jsonParser, function (req, res) {
-  let response = getResponse();
+    return;
+  }
   let data = {
     "user_id": req.body.user_id,
     "video_id": req.body.video_id,
@@ -152,6 +164,15 @@ function getResponse() {
     "msg": "success",
     "data": {}
   }
+}
+
+function checkBody(req, response) {
+  if (!req.body) {
+    response.code = 1;
+    response.msg = "请求参数错误";
+    return false
+  }
+  return true
 }
 
 const server = app.listen(8080, function () {
