@@ -66,6 +66,7 @@ app.post('/api/addVideo', jsonParser, function (req, res) {
 app.get('/api/videoList', function (req, res) {
   let response = getResponse();
   let userId = req.query.userId;
+  let isApp = req.headers.app_name === "rn-video";
   sql.queryUserById(userId, function (err, result) {
     if (err) {
       response.code = 1;
@@ -85,7 +86,11 @@ app.get('/api/videoList', function (req, res) {
           response.code = 1;
           response.msg = err;
         } else {
-          response.data.videoList = result
+          if (isApp) {
+            response.data.videoList = result.filter(item => item.hls_state === 1)
+          } else {
+            response.data.videoList = result
+          }
         }
         res.end(JSON.stringify(response))
       })
