@@ -33,6 +33,12 @@ exports.addUser = function (data, callback) {
   queryDb(sql, addSqlParams, callback);
 }
 
+exports.updateUserPassword = function (userId, newPassword, callback) {
+  const sql = 'UPDATE user SET password = ? WHERE id = ?';
+  const addSqlParams = [newPassword, userId];
+  queryDb(sql, addSqlParams, callback);
+}
+
 
 exports.uploadVideo = function (data, callback) {
   const sql = 'INSERT INTO video(title,thumbnail,source_url,s3_url,upload_time) VALUES(?,?,?,?,?)'
