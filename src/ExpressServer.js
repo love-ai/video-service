@@ -45,6 +45,47 @@ app.post('/api/login', jsonParser, function (req, res) {
   }
 })
 
+
+app.post('/api/modifyPassword', jsonParser, function (req, res) {
+  let response = getResponse();
+  if (!checkBody(req, response)) {
+    res.end(JSON.stringify(response))
+    return;
+  }
+  let mobile = req.body.mobile;
+  let password = req.body.password;
+  let newPassword = req.body.newPassword;
+  if (mobile) {
+    sql.queryUserByMobile(mobile, function (err, result) {
+      if (err) {
+        response.code = 1;
+        response.msg = err;
+      } else if (result.length === 0) {
+        response.code = 1;
+        response.msg = "请输入正确的手机号";
+      } else if (result[0].password !== password) {
+        response.code = 2;
+        response.msg = "原密码错误";
+      } else {
+        //更新密码
+        sql.updateUserPassword(result[0].id, newPassword, function (err, result) {
+          if (err) {
+            response.code = 1;
+            response.msg = err;
+          }
+          res.end(JSON.stringify(response))
+        })
+        return;
+      }
+      res.end(JSON.stringify(response))
+    })
+  } else {
+    response.code = 1;
+    response.msg = "请输入手机号";
+    res.end(JSON.stringify(response))
+  }
+})
+
 app.post('/api/addVideo', jsonParser, function (req, res) {
   let response = getResponse();
   if (!checkBody(req, response)) {
