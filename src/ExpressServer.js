@@ -108,34 +108,18 @@ app.get('/api/videoList', function (req, res) {
   let response = getResponse();
   let userId = req.query.userId;
   let isApp = req.headers.app_name === "RnVideo";
-  sql.queryUserById(userId, function (err, result) {
+  sql.queryVideoList(userId, function (err, result) {
     if (err) {
       response.code = 1;
       response.msg = err;
-      res.end(JSON.stringify(response))
-    } else if (result.length === 0) {
-      response.code = 1;
-      response.msg = "未找到用户";
-      res.end(JSON.stringify(response))
-    } else if (result[0].user_type === 0) {
-      response.code = 1002;
-      response.msg = "您没有查看视频的权限";
-      res.end(JSON.stringify(response))
     } else {
-      sql.queryVideoList(result[0].id, function (err, result) {
-        if (err) {
-          response.code = 1;
-          response.msg = err;
-        } else {
-          if (isApp) {
-            response.data.videoList = result.filter(item => item.hls_state === 1)
-          } else {
-            response.data.videoList = result
-          }
-        }
-        res.end(JSON.stringify(response))
-      })
+      if (isApp) {
+        response.data.videoList = result.filter(item => item.hls_state === 1)
+      } else {
+        response.data.videoList = result
+      }
     }
+    res.end(JSON.stringify(response))
   })
 });
 
