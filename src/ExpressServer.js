@@ -93,13 +93,31 @@ app.post('/api/addVideo', jsonParser, function (req, res) {
     return;
   }
   let data = req.body;
-  data.upload_time = date.dateFormat("YYYY-mm-dd HH:MM:SS", new Date());
-  sql.uploadVideo(data, function (err, result) {
+  let s3_url = data.s3_url;
+  //查找hls_url
+  sql.getVideoHls(s3_url, function (err, result) {
     if (err) {
       response.code = 1;
       response.msg = err;
+      res.end(JSON.stringify(response))
+    } else {
+      let hls_url = "";
+      let hls_state = 0;
+      if (result && result.length > 0) {
+        hls_url = result[0].hls_url;
+        hls_state = 1;
+      }
+      data.hls_url = hls_url;
+      data.hls_state = hls_state;
+      data.upload_time = date.dateFormat("YYYY-mm-dd HH:MM:SS", new Date());
+      sql.uploadVideo(data, function (err, result) {
+        if (err) {
+          response.code = 1;
+          response.msg = err;
+        }
+        res.end(JSON.stringify(response))
+      })
     }
-    res.end(JSON.stringify(response))
   })
 });
 
