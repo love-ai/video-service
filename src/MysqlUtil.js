@@ -46,8 +46,8 @@ exports.getVideoHls = function (s3_url, callback) {
 }
 
 exports.uploadVideo = function (data, callback) {
-  const sql = 'INSERT INTO video(title,thumbnail,source_url,s3_url,hls_url,hls_state,upload_time) VALUES(?,?,?,?,?,?,?)'
-  const addSqlParams = [data.title, data.thumbnail, data.source_url, data.s3_url, data.hls_url, data.hls_state, data.upload_time];
+  const sql = 'INSERT INTO video(title,thumbnail,source_url,s3_url,hls_url,hls_state,create_user_id,upload_time) VALUES(?,?,?,?,?,?,?,?)'
+  const addSqlParams = [data.title, data.thumbnail, data.source_url, data.s3_url, data.hls_url, data.hls_state, data.create_user_id, data.upload_time];
   queryDb(sql, addSqlParams, callback);
 }
 
