@@ -212,24 +212,24 @@ app.post('/api/likeVideo', jsonParser, function (req, res) {
       response.msg = err;
       res.end(JSON.stringify(response))
     }
-  })
-  // 更新视频的点赞数
-  sql.getVideoLikeCount(data.video_id, function (err, result) {
-    if (err) {
-      response.code = 1;
-      response.msg = err;
-      res.end(JSON.stringify(response))
-    } else {
-      let like_num = result[0].like_num;
-      let unlike_num = result[0].unlike_num;
-      sql.updateVideoLikeCount(like_num, unlike_num, data.video_id, function (err, result) {
-        if (err) {
-          response.code = 1;
-          response.msg = err;
-        }
+    // 更新视频的点赞数
+    sql.getVideoLikeCount(data.video_id, function (err, result) {
+      if (err) {
+        response.code = 1;
+        response.msg = err;
         res.end(JSON.stringify(response))
-      })
-    }
+      } else {
+        let like_num = result[0].like_num;
+        let unlike_num = result[0].unlike_num;
+        sql.updateVideoLikeCount(like_num, unlike_num, data.video_id, function (err, result) {
+          if (err) {
+            response.code = 1;
+            response.msg = err;
+          }
+          res.end(JSON.stringify(response))
+        })
+      }
+    })
   })
 })
 
